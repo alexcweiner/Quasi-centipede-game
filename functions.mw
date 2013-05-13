@@ -1,0 +1,125 @@
+#a model of the quasi-centipede game as discussed in the paper 
+#"The Evolution of Cooperation in the Centipede Game with Finite Populations" 
+#by Rory Smead
+
+#RandomPlayerOptions(): out puts a two item list, reflecting the players'
+#decisions
+
+#TakePass(a,b) inputs: the player decisions, and outputs a value reflecting
+#their combined decision.
+
+#IncreaseSum(initSum,TPresult,growFactor) inputs: the initial value of the
+#prize value,The take/pass option, and growFactor as the amount the prize
+#value increases. Outputs the new sum based off the simultaneous decision
+#made by the players.
+
+#winnerPrize(total) inputs the total prize value and returns the winner's
+#share( (total/2)+1)
+
+#loserPrize(total) inputs the total prize value and returns the loser's
+#share (total-(total/2+1))
+
+#AllocatePrize(total,growFactor) inputs an initial value of the prize value
+#and a growth factor to increase the prize value each time. Players
+#strategies are generated randomly by the TakePass function outputs the
+#players payoff dividends.
+
+#MathIsFun,
+#Alex Weiner
+
+#functions
+#1 is a pass option
+#2 is a take option
+
+RandomPlayerOptions:=proc() local P1option,P2option, ra,rb:
+ra:=rand(1..2)():
+rb:=rand(1..2)():
+P1option:=ra():
+P2option:=rb():
+
+[P1option,P2option]:
+end:
+
+
+#outputs the new sum based off the simultaneous decision
+#made by the players
+IncreaseSum:=proc(initSum,TPresult,growFactor) local total:
+total:=initSum:
+
+if TP=1 then
+ total:=total + growFactor:
+elif TP=2 then
+ total:=total + growFactor:
+elif TP=3 then
+ total:=total + growFactor:
+else 
+ total:=total/2:
+fi:
+
+RETURN(total):
+end:
+
+
+
+TakePass:=proc(a,b)
+if a+b=2 then
+ RETURN(1): # both pass
+elif a>b then
+ RETURN(2): #a passes b takes
+elif a<b then
+ RETURN(3): #b passes a takes
+else
+ RETURN(4): #both take
+fi:
+end:
+
+
+
+
+
+
+
+
+
+
+#1=continue game
+#2=player 2 wins  
+#3=player 1 wins   
+#4=split prize
+
+
+
+AllocatePrize:=proc(total,growFactor) local tp,prize,split:
+
+split:=[]:
+
+ tp:=TakePass(RandomPlayerOptions()[1],RandomPlayerOptions()[2]):
+print(`the take pass  is`):
+print(tp):
+ prize:=IncreaseSum(total,tp,growFactor):
+
+ if tp=1 then
+  AllocatePrize(prize,growFactor):
+
+ elif tp=2 then
+  split:=[loserPrize(prize),winnerPrize(prize)]:
+  	
+ elif tp=3 then
+  split:=[winnerPrize(prize),loserPrize(prize)]:
+	
+ elif tp=4 then
+  split:=[prize,prize]:
+	
+ fi:
+
+ print(split):
+end:
+
+winnerPrize:=proc(total)
+total/2+1:
+end:
+
+loserPrize:=proc(total)
+total-(total/2+1):
+end:
+
